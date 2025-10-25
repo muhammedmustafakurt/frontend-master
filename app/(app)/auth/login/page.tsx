@@ -30,14 +30,7 @@ export default function LoginPage() {
         checkAuth();
     }, [router]);
 
-    useEffect(()=>{
-        if(state?.type==="success"){
-            const timer=setTimeout(()=>{
-                router.push("/");
-            },2000);
-            return ()=>clearTimeout(timer);
-        }
-    },[state?.type,router]);
+    // Server Action'dan doğrudan redirect yapıldığı için client-side redirect'e gerek yok
 
     if (loading) {
         return (
@@ -63,26 +56,13 @@ export default function LoginPage() {
                     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                         <form action={formAction} method="POST" className="space-y-6">
                             <div>
-                                {/* Hata/Success Mesajı */}
-                                {state?.message && (
-                                    <div className={`p-3 rounded-lg text-sm ${
-                                        state.type === "success"
-                                            ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                                            : 'bg-red-500/20 text-red-300 border border-red-500/30'
-                                    }`}>
+                                {/* Hata Mesajı */}
+                                {state?.message && state?.type === "error" && (
+                                    <div className="p-3 rounded-lg text-sm bg-red-500/20 text-red-300 border border-red-500/30">
                                         <div className="flex items-center">
-                                            {state.type === "success" ? (
-                                                <i className="ri-checkbox-circle-fill mr-2"></i>
-                                            ) : (
-                                                <i className="ri-error-warning-fill mr-2"></i>
-                                            )}
+                                            <i className="ri-error-warning-fill mr-2"></i>
                                             {state.message}
                                         </div>
-                                        {state.type === "success" && (
-                                            <div className="text-xs mt-1 text-green-200">
-                                                Yönlendiriliyorsunuz...
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                                 <label

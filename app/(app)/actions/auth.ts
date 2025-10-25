@@ -1,6 +1,7 @@
 // app/actions/auth.ts
 "use server";
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 
@@ -133,12 +134,15 @@ export async function login(prevState: unknown, formData: FormData) {
             maxAge: 60 * 60 * 24, // 1 gün
         });
 
-        return {
-            message: "Giriş başarılı!",
-            type: "success",
-        };
+        // ✅ Server Action'dan doğrudan yönlendirme yap
+        redirect("/");
 
     } catch (error) {
+        // redirect() fonksiyonu özel bir error throw eder, bunu yakalayıp re-throw etmeliyiz
+        if (error && typeof error === 'object' && 'digest' in error && 
+            typeof error.digest === 'string' && error.digest.includes('NEXT_REDIRECT')) {
+            throw error;
+        }
         console.error("Login error:", error);
         return {
             message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
