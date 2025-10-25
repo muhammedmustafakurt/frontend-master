@@ -43,8 +43,19 @@ export default function AdminLoginPage() {
     useEffect(() => {
         if (state?.message && state?.type === "error") {
             setShowError(true);
+            
+            // Eğer kullanıcı yanlış login sayfasındaysa otomatik yönlendir
+            if (state.message.toLowerCase().includes('customer')) {
+                setTimeout(() => {
+                    router.push("/auth/login/customer");
+                }, 1000);
+            } else if (state.message.toLowerCase().includes('vendor')) {
+                setTimeout(() => {
+                    router.push("/auth/login/vendor");
+                }, 1000);
+            }
         }
-    }, [state]);
+    }, [state, router]);
 
     if (loading) {
         return (

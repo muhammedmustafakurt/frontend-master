@@ -22,9 +22,14 @@ export async function middleware(req: NextRequest) {
                 if (verifyResponse.ok) {
                     const userData = await verifyResponse.json();
                     const userRole = userData.payload?.role;
+                    const isApproved = userData.payload?.isApproved;
                     
                     // Giriş yapmış kullanıcıyı role'üne göre yönlendir
                     if (userRole === 'vendor') {
+                        // Vendor onaylı değilse unauthorized sayfasına yönlendir
+                        if (isApproved === false) {
+                            return NextResponse.redirect(new URL("/vendor/unauthorized", req.url));
+                        }
                         return NextResponse.redirect(new URL("/vendor/panel", req.url));
                     } else if (userRole === 'admin') {
                         return NextResponse.redirect(new URL("/admin/panel", req.url));
@@ -75,11 +80,22 @@ export async function middleware(req: NextRequest) {
 
         const userData = await verifyResponse.json();
         const userRole = userData.payload?.role;
+        const isApproved = userData.payload?.isApproved;
 
         // 🎯 ROLE-BASED ACCESS CONTROL
 
         // 1️⃣ VENDOR: Sadece /vendor/panel ve alt sayfalarına erişebilir
         if (userRole === 'vendor') {
+            // ⚠️ Vendor onaylı değilse → unauthorized sayfasına yönlendir
+            if (isApproved === false) {
+                if (!pathname.startsWith("/vendor/unauthorized")) {
+                    return NextResponse.redirect(new URL("/vendor/unauthorized", req.url));
+                }
+                // Zaten unauthorized sayfasındaysa → izin ver
+                return NextResponse.next();
+            }
+
+            // ✅ Onaylı vendor
             if (!pathname.startsWith("/vendor/panel")) {
                 // Vendor başka bir sayfaya gitmeye çalışıyor → vendor panel'e yönlendir
                 return NextResponse.redirect(new URL("/vendor/panel", req.url));

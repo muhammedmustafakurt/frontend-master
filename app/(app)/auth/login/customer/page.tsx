@@ -43,8 +43,19 @@ export default function CustomerLoginPage() {
     useEffect(() => {
         if (state?.message && state?.type === "error") {
             setShowError(true);
+            
+            // Eğer kullanıcı yanlış login sayfasındaysa otomatik yönlendir
+            if (state.message.toLowerCase().includes('vendor')) {
+                setTimeout(() => {
+                    router.push("/auth/login/vendor");
+                }, 1000);
+            } else if (state.message.toLowerCase().includes('admin')) {
+                setTimeout(() => {
+                    router.push("/auth/login/admin");
+                }, 1000);
+            }
         }
-    }, [state]);
+    }, [state, router]);
 
     if (loading) {
         return (
@@ -202,7 +213,7 @@ export default function CustomerLoginPage() {
                     {/* Register Link */}
                     <p className="mt-8 text-center text-sm text-gray-400">
                         Hesabınız yok mu?{" "}
-                        <Link href="/auth/register" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors underline-offset-4 hover:underline">
+                        <Link href="/auth/register/customer" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors underline-offset-4 hover:underline">
                             Hemen Kayıt Olun
                         </Link>
                     </p>

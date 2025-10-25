@@ -43,8 +43,19 @@ export default function VendorLoginPage() {
     useEffect(() => {
         if (state?.message && state?.type === "error") {
             setShowError(true);
+            
+            // Eğer kullanıcı yanlış login sayfasındaysa otomatik yönlendir
+            if (state.message.toLowerCase().includes('customer')) {
+                setTimeout(() => {
+                    router.push("/auth/login/customer");
+                }, 1000);
+            } else if (state.message.toLowerCase().includes('admin')) {
+                setTimeout(() => {
+                    router.push("/auth/login/admin");
+                }, 1000);
+            }
         }
-    }, [state]);
+    }, [state, router]);
 
     if (loading) {
         return (
@@ -79,6 +90,18 @@ export default function VendorLoginPage() {
 
                 {/* Login Card */}
                 <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-700/50 p-8 animate-slideUp">
+                    {/* Approval Warning Banner */}
+                    <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 mb-6">
+                        <div className="flex items-start gap-2">
+                            <i className="ri-shield-check-line text-orange-400 text-lg mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p className="text-xs text-orange-200 leading-relaxed">
+                                    <strong className="text-orange-300">Yeni satıcılar:</strong> Hesabınız admin tarafından onaylanmadan giriş yapamazsınız. Onay beklerken bu sayfada giriş denemeniz hata verecektir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <form action={formAction} method="POST" className="space-y-6">
                         {/* Error Message with Animation */}
                         {showError && state?.message && state?.type === "error" && (
@@ -202,7 +225,7 @@ export default function VendorLoginPage() {
                     {/* Register Link */}
                     <p className="mt-8 text-center text-sm text-gray-400">
                         Satıcı olmak ister misiniz?{" "}
-                        <Link href="/auth/register" className="font-semibold text-green-400 hover:text-green-300 transition-colors underline-offset-4 hover:underline">
+                        <Link href="/auth/register/vendor" className="font-semibold text-green-400 hover:text-green-300 transition-colors underline-offset-4 hover:underline">
                             Hemen Başvurun
                         </Link>
                     </p>

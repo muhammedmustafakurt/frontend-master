@@ -242,14 +242,10 @@ export default function CustomerRegisterPage() {
                     </div>
 
                     {/* Other Register Options */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <Link href="/auth/register/vendor" className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-900 hover:border-green-500/50 hover:text-green-400 transition-all duration-300 group">
+                    <div className="flex justify-center">
+                        <Link href="/auth/register/vendor" className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-900 hover:border-green-500/50 hover:text-green-400 transition-all duration-300 group">
                             <i className="ri-store-2-line text-lg group-hover:scale-110 transition-transform"></i>
-                            <span>Satıcı</span>
-                        </Link>
-                        <Link href="/auth/register/admin" className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-900 hover:border-red-500/50 hover:text-red-400 transition-all duration-300 group">
-                            <i className="ri-admin-line text-lg group-hover:scale-110 transition-transform"></i>
-                            <span>Admin</span>
+                            <span>Satıcı Olarak Kayıt Ol</span>
                         </Link>
                     </div>
 
