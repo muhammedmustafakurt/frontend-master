@@ -5,8 +5,14 @@ export async function middleware(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
     const { pathname } = req.nextUrl;
 
-    // 🔓 Public routes - Token kontrolü yok
+    // 🔓 Public routes - Token kontrolü yok veya özel durum
     const publicRoutes = ["/auth/login/customer", "/auth/login/vendor", "/auth/login/admin", "/auth/register"];
+    
+    // ⚠️ Vendor unauthorized sayfası - özel durum (token varsa kalabilir)
+    if (pathname.startsWith("/vendor/unauthorized")) {
+        return NextResponse.next();
+    }
+    
     if (publicRoutes.some(route => pathname.startsWith(route))) {
         // Eğer token varsa ve geçerliyse, role'e göre yönlendir
         if (token) {
@@ -45,6 +51,7 @@ export async function middleware(req: NextRequest) {
                 }
             } catch (err) {
                 // Hata durumunda token'ı sil ve sayfaya izin ver
+                console.error('[Middleware] Public route token check error:', err);
                 const response = NextResponse.next();
                 response.cookies.delete("token");
                 return response;
@@ -62,7 +69,7 @@ export async function middleware(req: NextRequest) {
 
     try {
         // ✅ Token'ı backend'e doğrulat
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
         const verifyResponse = await fetch(`${apiUrl}/auth/verify`, {
             method: "GET",
             headers: {
@@ -73,6 +80,7 @@ export async function middleware(req: NextRequest) {
 
         // ❌ Token geçersizse → cookie sil + login'e yönlendir
         if (!verifyResponse.ok) {
+            console.error('[Middleware] Token verification failed:', verifyResponse.status);
             const res = NextResponse.redirect(new URL("/auth/login/customer", req.url));
             res.cookies.delete("token");
             return res;
@@ -125,7 +133,7 @@ export async function middleware(req: NextRequest) {
         return res;
 
     } catch (err) {
-        console.error("Token doğrulama hatası:", err);
+        console.error('[Middleware] Token verification error:', err);
         const res = NextResponse.redirect(new URL("/auth/login/customer", req.url));
         res.cookies.delete("token");
         return res;
