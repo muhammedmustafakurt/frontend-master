@@ -13,7 +13,7 @@ async function getAuthHeadersMultipart() {
 }
 
 function getApiUrl() {
-  return process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-production-b8a9.up.railway.app/api/v1';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
 }
 
 export interface UploadImageResult {

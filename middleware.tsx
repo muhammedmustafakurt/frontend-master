@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
         // Eğer token varsa ve geçerliyse, ana sayfaya yönlendir
         if (token) {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-production-b8a9.up.railway.app/api/v1';
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
                 const verifyResponse = await fetch(`${apiUrl}/auth/verify`, {
                     method: "GET",
                     headers: {
