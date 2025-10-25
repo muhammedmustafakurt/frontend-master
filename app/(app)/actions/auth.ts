@@ -89,7 +89,9 @@ export async function signup(prevState: unknown, formData: FormData) {
         };
     }
 }
-export async function login(prevState: unknown, formData: FormData) {
+
+// Customer Login
+export async function loginCustomer(prevState: unknown, formData: FormData) {
     const rawFormData = {
         email: sanitizeInput(formData.get("email")),
         password: formData.get("password") as string,
@@ -105,7 +107,7 @@ export async function login(prevState: unknown, formData: FormData) {
         }
 
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
-        const response = await fetch(`${apiUrl}/auth/login`, {
+        const response = await fetch(`${apiUrl}/auth/login/customer`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -116,40 +118,151 @@ export async function login(prevState: unknown, formData: FormData) {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("[Login] Backend error:", data);
             return {
-                message: data.message || "Giriş sırasında bir hata oluştu",
+                message: data.message || "Müşteri girişi sırasında bir hata oluştu",
                 type: "error",
             };
         }
 
-        console.log("[Login] Login successful, token received");
-        console.log("[Login] Token length:", data.access_token?.length || 0);
-
-        // ✅ Token'ı güvenli bir cookie'ye kaydet (Next.js 13+ resmi yöntemi)
         const cookieStore = await cookies();
         cookieStore.set({
             name: "token",
             value: data.access_token,
-            httpOnly: true,       // JS tarafından okunamaz
-            secure: process.env.NODE_ENV === "production", // prod ortamda HTTPS zorunlu
-            path: "/",            // tüm sayfalarda geçerli
-            sameSite: "lax",      // CSRF koruması
-            maxAge: 60 * 60 * 24, // 1 gün
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24,
         });
 
-        console.log("[Login] Cookie set successfully, redirecting to /");
-
-        // ✅ Server Action'dan doğrudan yönlendirme yap
         redirect("/");
 
     } catch (error) {
-        // redirect() fonksiyonu özel bir error throw eder, bunu yakalayıp re-throw etmeliyiz
         if (error && typeof error === 'object' && 'digest' in error && 
             typeof error.digest === 'string' && error.digest.includes('NEXT_REDIRECT')) {
             throw error;
         }
-        console.error("Login error:", error);
+        console.error("Customer login error:", error);
+        return {
+            message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+            type: "error",
+        };
+    }
+}
+
+// Vendor Login
+export async function loginVendor(prevState: unknown, formData: FormData) {
+    const rawFormData = {
+        email: sanitizeInput(formData.get("email")),
+        password: formData.get("password") as string,
+    };
+
+    try {
+        if (!rawFormData.email || !rawFormData.password) {
+            return { message: "E-posta ve şifre zorunludur", type: "error" };
+        }
+
+        if (!isValidEmail(rawFormData.email)) {
+            return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
+        const response = await fetch(`${apiUrl}/auth/login/vendor`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rawFormData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message || "Satıcı girişi sırasında bir hata oluştu",
+                type: "error",
+            };
+        }
+
+        const cookieStore = await cookies();
+        cookieStore.set({
+            name: "token",
+            value: data.access_token,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24,
+        });
+
+        redirect("/vendor/panel");
+
+    } catch (error) {
+        if (error && typeof error === 'object' && 'digest' in error && 
+            typeof error.digest === 'string' && error.digest.includes('NEXT_REDIRECT')) {
+            throw error;
+        }
+        console.error("Vendor login error:", error);
+        return {
+            message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+            type: "error",
+        };
+    }
+}
+
+// Admin Login
+export async function loginAdmin(prevState: unknown, formData: FormData) {
+    const rawFormData = {
+        email: sanitizeInput(formData.get("email")),
+        password: formData.get("password") as string,
+    };
+
+    try {
+        if (!rawFormData.email || !rawFormData.password) {
+            return { message: "E-posta ve şifre zorunludur", type: "error" };
+        }
+
+        if (!isValidEmail(rawFormData.email)) {
+            return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
+        const response = await fetch(`${apiUrl}/auth/login/admin`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rawFormData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message || "Admin girişi sırasında bir hata oluştu",
+                type: "error",
+            };
+        }
+
+        const cookieStore = await cookies();
+        cookieStore.set({
+            name: "token",
+            value: data.access_token,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24,
+        });
+
+        redirect("/admin/panel");
+
+    } catch (error) {
+        if (error && typeof error === 'object' && 'digest' in error && 
+            typeof error.digest === 'string' && error.digest.includes('NEXT_REDIRECT')) {
+            throw error;
+        }
+        console.error("Admin login error:", error);
         return {
             message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
             type: "error",

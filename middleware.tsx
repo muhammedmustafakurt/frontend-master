@@ -4,101 +4,113 @@ import type { NextRequest } from "next/server";
 export async function middleware(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
     const { pathname } = req.nextUrl;
-    
-    // Tek bir API URL kullan (tutarlılık için)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
 
-    console.log(`[Middleware] Path: ${pathname}, Token exists: ${!!token}, API URL: ${apiUrl}`);
-
-    // 🔒 Auth sayfaları için özel kontrol
-    if (pathname.startsWith("/auth/")) {
-        // Eğer token varsa ve geçerliyse, ana sayfaya yönlendir
+    // 🔓 Public routes - Token kontrolü yok
+    const publicRoutes = ["/auth/login/customer", "/auth/login/vendor", "/auth/login/admin", "/auth/register"];
+    if (publicRoutes.some(route => pathname.startsWith(route))) {
+        // Eğer token varsa ve geçerliyse, role'e göre yönlendir
         if (token) {
             try {
-                console.log(`[Middleware] Verifying token at: ${apiUrl}/auth/verify`);
-                
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
                 const verifyResponse = await fetch(`${apiUrl}/auth/verify`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                    cache: 'no-store', // Cache'i devre dışı bırak
                 });
 
-                console.log(`[Middleware] Verify response status: ${verifyResponse.status}`);
-
                 if (verifyResponse.ok) {
-                    // Token geçerli, ana sayfaya yönlendir
-                    return NextResponse.redirect(new URL("/", req.url));
+                    const userData = await verifyResponse.json();
+                    const userRole = userData.payload?.role;
+                    
+                    // Giriş yapmış kullanıcıyı role'üne göre yönlendir
+                    if (userRole === 'vendor') {
+                        return NextResponse.redirect(new URL("/vendor/panel", req.url));
+                    } else if (userRole === 'admin') {
+                        return NextResponse.redirect(new URL("/admin/panel", req.url));
+                    } else {
+                        // Customer ana sayfaya
+                        return NextResponse.redirect(new URL("/", req.url));
+                    }
                 } else {
-                    const errorText = await verifyResponse.text();
-                    console.error(`[Middleware] Token invalid on auth page: ${errorText}`);
-                    // Token geçersiz, sil ve auth sayfasına izin ver
+                    // Token geçersiz, sil ve sayfaya izin ver
                     const response = NextResponse.next();
                     response.cookies.delete("token");
                     return response;
                 }
             } catch (err) {
-                console.error(`[Middleware] Error verifying token on auth page:`, err);
-                // Hata durumunda token'ı sil ve auth sayfasına izin ver
+                // Hata durumunda token'ı sil ve sayfaya izin ver
                 const response = NextResponse.next();
                 response.cookies.delete("token");
                 return response;
             }
         }
-        // Token yoksa auth sayfasına izin ver
+        // Token yoksa public sayfaya izin ver
         return NextResponse.next();
     }
 
-    // 🔒 Korumalı sayfalar için token kontrolü
+    // 🔒 Protected routes - Token gerekli
     if (!token) {
-        console.log(`[Middleware] No token found, redirecting to login`);
-        return NextResponse.redirect(new URL("/auth/login", req.url));
+        // Token yoksa login'e yönlendir
+        return NextResponse.redirect(new URL("/auth/login/customer", req.url));
     }
 
     try {
-        // ✅ Token'ı Nest.js backend'e doğrulat
-        console.log(`[Middleware] Verifying token for protected route at: ${apiUrl}/auth/verify`);
-        
+        // ✅ Token'ı backend'e doğrulat
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
         const verifyResponse = await fetch(`${apiUrl}/auth/verify`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            cache: 'no-store', // Cache'i devre dışı bırak
+            cache: "no-store",
         });
 
-        console.log(`[Middleware] Protected route verify response status: ${verifyResponse.status}`);
-
-        // ❌ Token geçersizse → cookie sil + yönlendir
+        // ❌ Token geçersizse → cookie sil + login'e yönlendir
         if (!verifyResponse.ok) {
-            const errorText = await verifyResponse.text();
-            console.error(`[Middleware] Token verification failed: ${errorText}`);
-            const res = NextResponse.redirect(new URL("/auth/login", req.url));
+            const res = NextResponse.redirect(new URL("/auth/login/customer", req.url));
             res.cookies.delete("token");
             return res;
         }
 
-        console.log(`[Middleware] Token verified successfully`);
+        const userData = await verifyResponse.json();
+        const userRole = userData.payload?.role;
 
+        // 🎯 ROLE-BASED ACCESS CONTROL
 
-        // 🔒 Vendor panel için role kontrolü
-        if (pathname.startsWith("/vendor/")) {
-            const userData = await verifyResponse.json();
-            const userRole = userData.payload?.role;
-            
-            // Sadece vendor ve admin erişebilir
-            if (userRole !== 'vendor' && userRole !== 'admin') {
-                return NextResponse.redirect(new URL("/", req.url));
+        // 1️⃣ VENDOR: Sadece /vendor/panel ve alt sayfalarına erişebilir
+        if (userRole === 'vendor') {
+            if (!pathname.startsWith("/vendor/panel")) {
+                // Vendor başka bir sayfaya gitmeye çalışıyor → vendor panel'e yönlendir
+                return NextResponse.redirect(new URL("/vendor/panel", req.url));
             }
+            // Vendor /vendor/panel/* sayfalarında → izin ver
+            return NextResponse.next();
         }
 
-        // ✅ Token geçerli → isteğe izin ver
-        return NextResponse.next();
+        // 2️⃣ CUSTOMER: /vendor/panel ve /admin/panel'e erişemez
+        if (userRole === 'customer') {
+            if (pathname.startsWith("/vendor/panel") || pathname.startsWith("/admin/panel")) {
+                // Customer yasak sayfaya gitmeye çalışıyor → ana sayfaya yönlendir
+                return NextResponse.redirect(new URL("/", req.url));
+            }
+            // Customer diğer sayfalarda → izin ver
+            return NextResponse.next();
+        }
+
+        // 3️⃣ ADMIN: Tüm sayfalara erişebilir
+        if (userRole === 'admin') {
+            return NextResponse.next();
+        }
+
+        // 🚫 Bilinmeyen role → login'e yönlendir
+        const res = NextResponse.redirect(new URL("/auth/login/customer", req.url));
+        res.cookies.delete("token");
+        return res;
+
     } catch (err) {
         console.error("Token doğrulama hatası:", err);
-
-        const res = NextResponse.redirect(new URL("/auth/login", req.url));
+        const res = NextResponse.redirect(new URL("/auth/login/customer", req.url));
         res.cookies.delete("token");
         return res;
     }
@@ -107,10 +119,13 @@ export async function middleware(req: NextRequest) {
 // 🔍 Middleware'in çalışacağı yollar
 export const config = {
     matcher: [
-        "/",   // ana sayfa korunuyor
-        "/dashboard/:path*",   // dashboard sayfaları
-        "/profile/:path*",     // profil sayfaları
-        "/vendor/:path*",      // vendor panel (role kontrolü ile)
-        "/auth/:path*",        // auth sayfaları (giriş yapmış kullanıcıları yönlendirmek için)
+        /*
+         * Tüm route'larda middleware çalışır, şunlar hariç:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        "/((?!api|_next/static|_next/image|favicon.ico).*)",
     ],
 };
