@@ -116,11 +116,15 @@ export async function login(prevState: unknown, formData: FormData) {
         const data = await response.json();
 
         if (!response.ok) {
+            console.error("[Login] Backend error:", data);
             return {
                 message: data.message || "Giriş sırasında bir hata oluştu",
                 type: "error",
             };
         }
+
+        console.log("[Login] Login successful, token received");
+        console.log("[Login] Token length:", data.access_token?.length || 0);
 
         // ✅ Token'ı güvenli bir cookie'ye kaydet (Next.js 13+ resmi yöntemi)
         const cookieStore = await cookies();
@@ -133,6 +137,8 @@ export async function login(prevState: unknown, formData: FormData) {
             sameSite: "lax",      // CSRF koruması
             maxAge: 60 * 60 * 24, // 1 gün
         });
+
+        console.log("[Login] Cookie set successfully, redirecting to /");
 
         // ✅ Server Action'dan doğrudan yönlendirme yap
         redirect("/");
