@@ -26,6 +26,199 @@ function isValidPassword(password: string): boolean {
     return passwordRegex.test(password);
 }
 
+// Customer Signup
+export async function signupCustomer(prevState: unknown, formData: FormData) {
+    const rawFormData = {
+        name: sanitizeInput(formData.get("name")),
+        email: sanitizeInput(formData.get("email")),
+        password: formData.get("password") as string,
+        phone: sanitizeInput(formData.get("phone")),
+        address: sanitizeInput(formData.get("address")),
+    };
+
+    try {
+        if (!rawFormData.email || !rawFormData.password || !rawFormData.name) {
+            return { message: "Ad, e-posta ve şifre zorunludur", type: "error" };
+        }
+
+        if (!isValidEmail(rawFormData.email)) {
+            return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
+        }
+
+        if (!isValidPassword(rawFormData.password)) {
+            return { 
+                message: "Şifre en az 8 karakter olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir", 
+                type: "error" 
+            };
+        }
+
+        if (rawFormData.name.length < 2) {
+            return { message: "Ad soyad en az 2 karakter olmalıdır", type: "error" };
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
+        const response = await fetch(`${apiUrl}/users/register/customer`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rawFormData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message || "Kayıt sırasında bir hata oluştu",
+                type: "error"
+            };
+        }
+
+        return {
+            message: data.message || "Müşteri kaydı başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
+            type: "success",
+            data: data
+        };
+
+    } catch (error) {
+        console.error("Customer signup error:", error);
+        return {
+            message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+            type: "error"
+        };
+    }
+}
+
+// Vendor Signup
+export async function signupVendor(prevState: unknown, formData: FormData) {
+    const rawFormData = {
+        name: sanitizeInput(formData.get("name")),
+        email: sanitizeInput(formData.get("email")),
+        password: formData.get("password") as string,
+        phone: sanitizeInput(formData.get("phone")),
+        companyName: sanitizeInput(formData.get("companyName")),
+        address: sanitizeInput(formData.get("address")),
+    };
+
+    try {
+        if (!rawFormData.email || !rawFormData.password || !rawFormData.name || !rawFormData.companyName) {
+            return { message: "Ad, e-posta, şifre ve şirket adı zorunludur", type: "error" };
+        }
+
+        if (!isValidEmail(rawFormData.email)) {
+            return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
+        }
+
+        if (!isValidPassword(rawFormData.password)) {
+            return { 
+                message: "Şifre en az 8 karakter olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir", 
+                type: "error" 
+            };
+        }
+
+        if (rawFormData.name.length < 2) {
+            return { message: "Ad soyad en az 2 karakter olmalıdır", type: "error" };
+        }
+
+        if (rawFormData.companyName.length < 2) {
+            return { message: "Şirket adı en az 2 karakter olmalıdır", type: "error" };
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
+        const response = await fetch(`${apiUrl}/users/register/vendor`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rawFormData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message || "Kayıt sırasında bir hata oluştu",
+                type: "error"
+            };
+        }
+
+        return {
+            message: data.message || "Satıcı kaydı başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
+            type: "success",
+            data: data
+        };
+
+    } catch (error) {
+        console.error("Vendor signup error:", error);
+        return {
+            message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+            type: "error"
+        };
+    }
+}
+
+// Admin Signup
+export async function signupAdmin(prevState: unknown, formData: FormData) {
+    const rawFormData = {
+        name: sanitizeInput(formData.get("name")),
+        email: sanitizeInput(formData.get("email")),
+        password: formData.get("password") as string,
+    };
+
+    try {
+        if (!rawFormData.email || !rawFormData.password || !rawFormData.name) {
+            return { message: "Ad, e-posta ve şifre zorunludur", type: "error" };
+        }
+
+        if (!isValidEmail(rawFormData.email)) {
+            return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
+        }
+
+        if (!isValidPassword(rawFormData.password)) {
+            return { 
+                message: "Şifre en az 8 karakter olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir", 
+                type: "error" 
+            };
+        }
+
+        if (rawFormData.name.length < 2) {
+            return { message: "Ad soyad en az 2 karakter olmalıdır", type: "error" };
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-jgfr.onrender.com/api/v1';
+        const response = await fetch(`${apiUrl}/users/register/admin`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rawFormData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message || "Kayıt sırasında bir hata oluştu",
+                type: "error"
+            };
+        }
+
+        return {
+            message: data.message || "Admin kaydı başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
+            type: "success",
+            data: data
+        };
+
+    } catch (error) {
+        console.error("Admin signup error:", error);
+        return {
+            message: "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+            type: "error"
+        };
+    }
+}
+
+// Eski genel signup (geriye dönük uyumluluk için)
 export async function signup(prevState: unknown, formData: FormData) {
     const rawFormData = {
         name: sanitizeInput(formData.get("name")),
@@ -35,7 +228,6 @@ export async function signup(prevState: unknown, formData: FormData) {
     };
 
     try {
-        // Input validation
         if (!rawFormData.email || !rawFormData.password || !rawFormData.name) {
             return { message: "Tüm alanlar zorunludur", type: "error" };
         }
@@ -67,13 +259,11 @@ export async function signup(prevState: unknown, formData: FormData) {
         const data = await response.json();
 
         if (!response.ok) {
-
             return {
                 message: data.message || "Kayıt sırasında bir hata oluştu",
                 type: "error"
             };
         }
-
 
         return {
             message: data.message || "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
