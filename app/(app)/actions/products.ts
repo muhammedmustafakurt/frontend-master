@@ -54,7 +54,7 @@ export interface CreateProductData {
     images?: string[];
 }
 
-export interface UpdateProductData extends Partial<CreateProductData> {}
+export type UpdateProductData = Partial<CreateProductData>;
 
 // Get all vendor products
 export async function getVendorProducts(): Promise<{ success: boolean; data?: Product[]; error?: string }> {

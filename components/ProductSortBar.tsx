@@ -164,7 +164,7 @@ export default function ProductSortBar({
 
           {activeFilters.search && (
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-gray-800 text-white text-sm rounded-full">
-              "{activeFilters.search}"
+              &quot;{activeFilters.search}&quot;
               <button
                 onClick={() => onFilterChange({ ...activeFilters, search: undefined, page: 1 })}
                 className="hover:bg-gray-700 rounded-full p-0.5"

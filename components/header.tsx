@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import MiniCart from './cart/MiniCart';
 
 // SVG Icons as React components
@@ -25,12 +26,6 @@ const UserIcon = () => (
 const HeartIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-  </svg>
-);
-
-const ShoppingCartIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
   </svg>
 );
 
@@ -160,7 +155,6 @@ export default function Header() {
   const [selectedYear, setSelectedYear] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [cartCount] = useState(3); // Dummy cart count
   const [favoritesCount] = useState(7); // Dummy favorites count
   const [compareCount] = useState(2); // Dummy compare count
 
@@ -201,9 +195,9 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="/" className="text-2xl font-bold text-black">
+            <Link href="/" className="text-2xl font-bold text-black">
               AutoParts
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Search Bar */}

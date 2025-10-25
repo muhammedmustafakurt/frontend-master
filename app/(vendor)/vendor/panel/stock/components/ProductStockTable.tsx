@@ -11,6 +11,7 @@ interface Product {
     stock: number;
     status: string;
     images?: string[];
+    [key: string]: unknown;
 }
 
 interface ProductStockTableProps {

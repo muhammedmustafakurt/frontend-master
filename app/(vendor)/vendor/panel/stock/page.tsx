@@ -6,6 +6,19 @@ import AddStockMovementModal from './components/AddStockMovementModal';
 import StockSummaryCards from './components/StockSummaryCards';
 import ProductStockTable from './components/ProductStockTable';
 
+interface ProductForMovement {
+    id: number;
+    name: string;
+    sku: string;
+    brand: string;
+    category: string;
+    price: number;
+    stock: number;
+    status: string;
+    images?: string[];
+    [key: string]: unknown;
+}
+
 export default function StockManagementPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all');
@@ -14,7 +27,7 @@ export default function StockManagementPage() {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
     const [showAddMovementModal, setShowAddMovementModal] = useState(false);
-    const [selectedProductForMovement, setSelectedProductForMovement] = useState<any>(null);
+    const [selectedProductForMovement, setSelectedProductForMovement] = useState<ProductForMovement | null>(null);
 
     const { data: products, isLoading: productsLoading, error: productsError } = useStockProducts();
     const { data: summary, isLoading: summaryLoading } = useStockSummary();
@@ -25,7 +38,7 @@ export default function StockManagementPage() {
     const filteredAndSortedProducts = useMemo(() => {
         if (!products) return [];
 
-        let filtered = products.filter(product => {
+        const filtered = products.filter(product => {
             // Search filter
             const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                 product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,11 +108,11 @@ export default function StockManagementPage() {
         }
     };
 
-    const handleViewHistory = (product: any) => {
+    const handleViewHistory = (product: { id: number }) => {
         setSelectedProductId(product.id);
     };
 
-    const handleAddMovement = (product: any) => {
+    const handleAddMovement = (product: ProductForMovement) => {
         setSelectedProductForMovement(product);
         setShowAddMovementModal(true);
     };
@@ -182,7 +195,7 @@ export default function StockManagementPage() {
                                 <select
                                     id="status"
                                     value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                                    onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive' | 'draft')}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="all">Tümü</option>
@@ -200,7 +213,7 @@ export default function StockManagementPage() {
                                 <select
                                     id="stock"
                                     value={stockFilter}
-                                    onChange={(e) => setStockFilter(e.target.value as any)}
+                                    onChange={(e) => setStockFilter(e.target.value as 'all' | 'low' | 'out' | 'normal')}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="all">Tümü</option>
@@ -218,7 +231,7 @@ export default function StockManagementPage() {
                                 <div className="flex space-x-2">
                                     <select
                                         value={sortBy}
-                                        onChange={(e) => setSortBy(e.target.value as any)}
+                                        onChange={(e) => setSortBy(e.target.value as 'name' | 'stock' | 'price' | 'createdAt')}
                                         className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="name">İsim</option>
@@ -240,7 +253,7 @@ export default function StockManagementPage() {
 
                 {/* Products Table */}
                 <ProductStockTable
-                    products={filteredAndSortedProducts}
+                    products={filteredAndSortedProducts as unknown as ProductForMovement[]}
                     onStockUpdate={handleStockUpdate}
                     onPriceUpdate={handlePriceUpdate}
                     onViewHistory={handleViewHistory}

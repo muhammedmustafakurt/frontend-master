@@ -1,17 +1,6 @@
 "use client";
 import { useState } from 'react';
-
-interface Product {
-    id: number;
-    name: string;
-    sku: string;
-    brand: string;
-    category: string;
-    price: number;
-    stock: number;
-    status: string;
-    images?: string[];
-}
+import type { Product } from '@/app/(app)/actions/price';
 
 interface ProductPriceTableProps {
     products: Product[];

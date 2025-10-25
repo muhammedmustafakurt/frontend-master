@@ -2,8 +2,6 @@ import {
   Cart, 
   CartSummary, 
   AddToCartRequest, 
-  UpdateCartItemRequest, 
-  MergeCartRequest,
   CartValidationResult 
 } from '@/types/cart';
 

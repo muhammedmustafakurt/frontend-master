@@ -1,10 +1,18 @@
 "use client";
 import { useState, useMemo } from 'react';
 import { usePriceProducts, usePriceSummary, useUpdatePrice, useBulkUpdatePrices } from '@/app/(app)/hooks/usePrice';
+import { Product } from '@/app/(app)/actions/price';
 import PriceHistoryModal from './components/PriceHistoryModal';
 import BulkUpdateModal from './components/BulkUpdateModal';
 import PriceSummaryCards from './components/PriceSummaryCards';
 import ProductPriceTable from './components/ProductPriceTable';
+
+interface BulkUpdateData {
+    type: 'PERCENTAGE' | 'FIXED';
+    percentage?: number;
+    fixedPrice?: number;
+    reason?: string;
+}
 
 export default function PriceManagementPage() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +33,7 @@ export default function PriceManagementPage() {
     const filteredAndSortedProducts = useMemo(() => {
         if (!products) return [];
 
-        let filtered = products.filter(product => {
+        const filtered = products.filter(product => {
             // Search filter
             const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                 product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -86,7 +94,7 @@ export default function PriceManagementPage() {
         }
     };
 
-    const handleViewHistory = (product: any) => {
+    const handleViewHistory = (product: Product) => {
         setSelectedProductId(product.id);
     };
 
@@ -94,7 +102,7 @@ export default function PriceManagementPage() {
         setShowBulkUpdateModal(true);
     };
 
-    const handleBulkUpdateSubmit = async (bulkUpdateData: any) => {
+    const handleBulkUpdateSubmit = async (bulkUpdateData: BulkUpdateData) => {
         try {
             const result = await bulkUpdateMutation.mutateAsync({
                 ...bulkUpdateData,
@@ -218,7 +226,7 @@ export default function PriceManagementPage() {
                                 <select
                                     id="status"
                                     value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                                    onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive' | 'draft')}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="all">Tümü</option>
@@ -236,7 +244,7 @@ export default function PriceManagementPage() {
                                 <select
                                     id="price"
                                     value={priceFilter}
-                                    onChange={(e) => setPriceFilter(e.target.value as any)}
+                                    onChange={(e) => setPriceFilter(e.target.value as 'all' | 'high' | 'low' | 'discounted')}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="all">Tümü</option>
@@ -254,7 +262,7 @@ export default function PriceManagementPage() {
                                 <div className="flex space-x-2">
                                     <select
                                         value={sortBy}
-                                        onChange={(e) => setSortBy(e.target.value as any)}
+                                        onChange={(e) => setSortBy(e.target.value as 'name' | 'price' | 'createdAt')}
                                         className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="name">İsim</option>

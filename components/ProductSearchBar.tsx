@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, TrendingUp, Package, Tag, Clock } from 'lucide-react';
-import { Product } from '@/types/product';
+import { Search, X, TrendingUp, Package, Tag } from 'lucide-react';
 import { customerProductAPI } from '@/lib/api/products';
 
 interface ProductSearchBarProps {

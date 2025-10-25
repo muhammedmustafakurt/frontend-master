@@ -1,10 +1,17 @@
 "use client";
 import { useState } from 'react';
 
+interface BulkUpdateData {
+    type: 'PERCENTAGE' | 'FIXED';
+    percentage?: number;
+    fixedPrice?: number;
+    reason?: string;
+}
+
 interface BulkUpdateModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: any) => void;
+    onSubmit: (data: BulkUpdateData) => void;
     selectedCount: number;
     totalCount: number;
 }
@@ -28,7 +35,7 @@ export default function BulkUpdateModal({ isOpen, onClose, onSubmit, selectedCou
             return;
         }
 
-        const data: any = {
+        const data: BulkUpdateData = {
             type: updateType,
             reason: reason || undefined
         };
@@ -106,7 +113,7 @@ export default function BulkUpdateModal({ isOpen, onClose, onSubmit, selectedCou
                             <select
                                 id="updateType"
                                 value={updateType}
-                                onChange={(e) => setUpdateType(e.target.value as any)}
+                                onChange={(e) => setUpdateType(e.target.value as 'PERCENTAGE' | 'FIXED')}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="PERCENTAGE">Yüzde Artış</option>

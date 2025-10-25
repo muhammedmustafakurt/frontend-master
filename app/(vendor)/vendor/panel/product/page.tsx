@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useVendorProducts, useDeleteProduct, useSoftDeleteProduct } from "@/app/(app)/hooks/useVendorProducts";
-import { Product } from "@/app/(app)/actions/products";
 
 export default function VendorProductsPage() {
     const [deleteMode, setDeleteMode] = useState<'soft' | 'hard'>('soft');
@@ -10,7 +9,7 @@ export default function VendorProductsPage() {
     const deleteProductMutation = useDeleteProduct();
     const softDeleteProductMutation = useSoftDeleteProduct();
 
-    const handleDelete = async (product: Product) => {
+    const handleDelete = async (product: { id: number; name: string }) => {
         if (!confirm(`"${product.name}" ürününü silmek istediğinizden emin misiniz?`)) {
             return;
         }
@@ -158,7 +157,7 @@ export default function VendorProductsPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {products.map((product :any) => (
+                                    {products.map((product: { id: number; images?: string[]; name: string; brand: string; sku: string; category: string; price: number; stock: number; status: string }) => (
                                         <tr key={product.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {product.images && product.images.length > 0 ? (

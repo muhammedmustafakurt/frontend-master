@@ -6,7 +6,6 @@ import BrandStrip from '../../components/BrandStrip';
 import AdvantagesStrip from '../../components/AdvantagesStrip';
 import BlogSection from '../../components/BlogSection';
 import TestimonialsSection from '../../components/TestimonialsSection';
-import Footer from '../../components/footer';
 
 export default function HomePage() {
   return (

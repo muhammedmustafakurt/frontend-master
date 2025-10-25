@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ProductCard from '../../../components/ProductCard';
 import ProductFiltersSidebar from '../../../components/ProductFiltersSidebar';
@@ -11,7 +11,7 @@ import { customerProductAPI } from '../../../lib/api/products';
 import { Product, ProductFilters, ProductsResponse } from '../../../types/product';
 import { Loader2 } from 'lucide-react';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -34,8 +34,8 @@ export default function ProductsPage() {
       vendorId: searchParams.get('vendorId') ? parseInt(searchParams.get('vendorId')!) : undefined,
       inStock: searchParams.get('inStock') === 'true' || undefined,
       search: searchParams.get('search') || undefined,
-      sortBy: (searchParams.get('sortBy') as any) || 'createdAt',
-      sortOrder: (searchParams.get('sortOrder') as any) || 'DESC',
+      sortBy: (searchParams.get('sortBy') as 'price' | 'createdAt' | 'name' | 'rating') || 'createdAt',
+      sortOrder: (searchParams.get('sortOrder') as 'ASC' | 'DESC') || 'DESC',
       compatibleWith: searchParams.get('compatibleWith') || undefined,
       minRating: searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined,
       oemNumber: searchParams.get('oemNumber') || undefined,
@@ -275,6 +275,18 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
 

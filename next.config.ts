@@ -39,16 +39,11 @@ const nextConfig: NextConfig = {
   // Disable X-Powered-By header
   poweredByHeader: false,
   
-  // Enable compression
-  compress: true,
-  
   // Security: Disable server-side source maps in production
   productionBrowserSourceMaps: false,
   
-  // Experimental features for security
-  experimental: {
-    serverComponentsExternalPackages: ['bcrypt'],
-  },
+  // External packages for server components
+  serverExternalPackages: ['bcrypt'],
 };
 
 export default nextConfig;

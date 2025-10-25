@@ -7,11 +7,16 @@ import { useCart } from '@/contexts/CartContext';
 import CartItemComponent from '../../../components/cart/CartItem';
 import CartSummary from '../../../components/cart/CartSummary';
 
+interface ValidationMessage {
+  productId: number;
+  message: string;
+}
+
 export default function CartPage() {
   const router = useRouter();
   const { cart, loading, error, totals, updateQuantity, removeItem, clearCart, validateCart } = useCart();
-  const [validationErrors, setValidationErrors] = useState<any[]>([]);
-  const [validationWarnings, setValidationWarnings] = useState<any[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationMessage[]>([]);
+  const [validationWarnings, setValidationWarnings] = useState<ValidationMessage[]>([]);
   const [isValidating, setIsValidating] = useState(false);
 
   // Validate cart on mount and when cart changes

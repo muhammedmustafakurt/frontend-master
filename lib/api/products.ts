@@ -2,6 +2,40 @@ import { Product, ProductFilters, ProductsResponse, FilterOptions } from '@/type
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
+// Advanced search types
+interface AdvancedSearchFilters {
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  vendorId?: number;
+}
+
+interface AdvancedSearchResponse {
+  products: Product[];
+  totalResults: number;
+  searchTerm: string;
+  appliedFilters: AdvancedSearchFilters;
+}
+
+interface AutocompleteResponse {
+  products: Array<{
+    id: number;
+    name: string;
+    price: number;
+    image: string | null;
+    brand: string;
+  }>;
+  categories: Array<{ name: string; count: number }>;
+  brands: Array<{ name: string; count: number }>;
+  keywords: string[];
+}
+
+interface FailedSearch {
+  searchTerm: string;
+  timestamp: string;
+  count: number;
+}
+
 export const customerProductAPI = {
   /**
    * Get products with filters and pagination
@@ -120,7 +154,7 @@ export const customerProductAPI = {
   /**
    * Advanced search with fuzzy matching and semantic search
    */
-  async advancedSearch(searchTerm: string, filters: any = {}, userId?: number, sessionId?: string): Promise<any> {
+  async advancedSearch(searchTerm: string, filters: AdvancedSearchFilters = {}, userId?: number, sessionId?: string): Promise<AdvancedSearchResponse> {
     const params = new URLSearchParams({
       q: searchTerm,
       ...(filters.category && { category: filters.category }),
@@ -143,7 +177,7 @@ export const customerProductAPI = {
   /**
    * Get autocomplete suggestions
    */
-  async getAutocomplete(query: string, limit: number = 10): Promise<any> {
+  async getAutocomplete(query: string, limit: number = 10): Promise<AutocompleteResponse> {
     if (!query || query.length < 2) {
       return { products: [], categories: [], brands: [], keywords: [] };
     }
@@ -207,7 +241,7 @@ export const customerProductAPI = {
   /**
    * Track search analytics
    */
-  async trackSearch(searchTerm: string, resultsCount: number, userId?: number, sessionId?: string, filters?: any): Promise<void> {
+  async trackSearch(searchTerm: string, resultsCount: number, userId?: number, sessionId?: string, filters?: AdvancedSearchFilters): Promise<void> {
     try {
       const response = await fetch(`${API_BASE_URL}/customer/products/track-search`, {
         method: 'POST',
@@ -235,7 +269,7 @@ export const customerProductAPI = {
   /**
    * Get failed searches (for admin/analytics)
    */
-  async getFailedSearches(limit: number = 20): Promise<any[]> {
+  async getFailedSearches(limit: number = 20): Promise<FailedSearch[]> {
     const params = new URLSearchParams({
       limit: String(limit)
     });

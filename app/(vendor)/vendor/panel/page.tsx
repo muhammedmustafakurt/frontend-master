@@ -3,8 +3,15 @@ import { useEffect, useState } from "react";
 import { verifySession, logout } from "@/app/(app)/actions/auth";
 import { useRouter } from "next/navigation";
 
+interface UserData {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+}
+
 export default function VendorPanelPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -208,7 +215,7 @@ export default function VendorPanelPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-md transition-colors">
-                    Tüm Vendor'ları Yönet
+                    Tüm Vendor&apos;ları Yönet
                   </button>
                   <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-md transition-colors">
                     Sistem Ayarları

@@ -7,7 +7,6 @@ import {
     updateProduct, 
     deleteProduct, 
     softDeleteProduct,
-    type Product,
     type CreateProductData,
     type UpdateProductData
 } from '../actions/products';
@@ -16,7 +15,7 @@ import {
 export const productKeys = {
     all: ['products'] as const,
     lists: () => [...productKeys.all, 'list'] as const,
-    list: (filters: Record<string, any>) => [...productKeys.lists(), { filters }] as const,
+    list: (filters: Record<string, unknown>) => [...productKeys.lists(), { filters }] as const,
     details: () => [...productKeys.all, 'detail'] as const,
     detail: (id: number) => [...productKeys.details(), id] as const,
 };

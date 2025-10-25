@@ -110,11 +110,11 @@ export default function CartItemComponent({
                 <div className="mb-2">
                   {Number(item.validation.currentPrice) > Number(item.price) ? (
                     <div className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded inline-block">
-                      Fiyat ₺{Number(item.price).toFixed(2)}'den ₺{Number(item.validation.currentPrice).toFixed(2)}'ye yükseldi
+                      Fiyat ₺{Number(item.price).toFixed(2)}&apos;den ₺{Number(item.validation.currentPrice).toFixed(2)}&apos;ye yükseldi
                     </div>
                   ) : (
                     <div className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded inline-block">
-                      Fiyat ₺{Number(item.price).toFixed(2)}'den ₺{Number(item.validation.currentPrice).toFixed(2)}'ye düştü
+                      Fiyat ₺{Number(item.price).toFixed(2)}&apos;den ₺{Number(item.validation.currentPrice).toFixed(2)}&apos;ye düştü
                     </div>
                   )}
                 </div>

@@ -105,7 +105,7 @@ export default function FeaturedProducts() {
     );
   };
 
-  const addToCart = (product: any) => {
+  const addToCart = (product: { id: number; name: string }) => {
     console.log('Added to cart:', product);
     alert(`${product.name} sepete eklendi!`);
   };

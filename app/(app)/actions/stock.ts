@@ -1,5 +1,9 @@
 "use server";
 import { cookies } from 'next/headers';
+import type { Product } from './products';
+
+// Re-export Product type for convenience
+export type { Product };
 
 // Helper function to get auth headers
 async function getAuthHeaders() {
@@ -59,7 +63,7 @@ export interface CreateStockMovementData {
 }
 
 // Get vendor products for stock management
-export async function getStockProducts(): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function getStockProducts(): Promise<{ success: boolean; data?: Product[]; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/stock/products`, {
@@ -105,7 +109,7 @@ export async function getStockSummary(): Promise<{ success: boolean; data?: Stoc
 }
 
 // Get low stock products
-export async function getLowStockProducts(threshold: number = 10): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function getLowStockProducts(threshold: number = 10): Promise<{ success: boolean; data?: Product[]; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/stock/low-stock?threshold=${threshold}`, {
@@ -128,7 +132,7 @@ export async function getLowStockProducts(threshold: number = 10): Promise<{ suc
 }
 
 // Update product stock
-export async function updateStock(productId: number, stock: number): Promise<{ success: boolean; data?: any; error?: string }> {
+export async function updateStock(productId: number, stock: number): Promise<{ success: boolean; data?: Product; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/stock/products/${productId}/stock`, {
@@ -151,7 +155,7 @@ export async function updateStock(productId: number, stock: number): Promise<{ s
 }
 
 // Update product price
-export async function updatePrice(productId: number, price: number): Promise<{ success: boolean; data?: any; error?: string }> {
+export async function updatePrice(productId: number, price: number): Promise<{ success: boolean; data?: Product; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/stock/products/${productId}/price`, {

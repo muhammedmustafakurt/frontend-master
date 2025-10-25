@@ -1,5 +1,9 @@
 "use server";
 import { cookies } from 'next/headers';
+import type { Product } from './products';
+
+// Re-export Product type for convenience
+export type { Product };
 
 // Helper function to get auth headers
 async function getAuthHeaders() {
@@ -74,7 +78,7 @@ export interface BulkPriceUpdateData {
 }
 
 // Get vendor products for price management
-export async function getPriceProducts(): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function getPriceProducts(): Promise<{ success: boolean; data?: Product[]; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/products`, {
@@ -120,7 +124,7 @@ export async function getPriceSummary(): Promise<{ success: boolean; data?: Pric
 }
 
 // Get high price products
-export async function getHighPriceProducts(threshold: number = 1000): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function getHighPriceProducts(threshold: number = 1000): Promise<{ success: boolean; data?: Product[]; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/high-price?threshold=${threshold}`, {
@@ -143,7 +147,7 @@ export async function getHighPriceProducts(threshold: number = 1000): Promise<{ 
 }
 
 // Get low price products
-export async function getLowPriceProducts(threshold: number = 100): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function getLowPriceProducts(threshold: number = 100): Promise<{ success: boolean; data?: Product[]; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/low-price?threshold=${threshold}`, {
@@ -166,7 +170,7 @@ export async function getLowPriceProducts(threshold: number = 100): Promise<{ su
 }
 
 // Update product price
-export async function updatePrice(productId: number, priceData: UpdatePriceData): Promise<{ success: boolean; data?: any; error?: string }> {
+export async function updatePrice(productId: number, priceData: UpdatePriceData): Promise<{ success: boolean; data?: Product; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/products/${productId}/price`, {
@@ -189,7 +193,7 @@ export async function updatePrice(productId: number, priceData: UpdatePriceData)
 }
 
 // Set discount price
-export async function setDiscount(productId: number, discountData: SetDiscountData): Promise<{ success: boolean; data?: any; error?: string }> {
+export async function setDiscount(productId: number, discountData: SetDiscountData): Promise<{ success: boolean; data?: Product; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/products/${productId}/discount`, {
@@ -212,7 +216,7 @@ export async function setDiscount(productId: number, discountData: SetDiscountDa
 }
 
 // Set discount percentage
-export async function setDiscountPercentage(productId: number, discountData: SetDiscountPercentageData): Promise<{ success: boolean; data?: any; error?: string }> {
+export async function setDiscountPercentage(productId: number, discountData: SetDiscountPercentageData): Promise<{ success: boolean; data?: Product; error?: string }> {
     try {
         const headers = await getAuthHeaders();
         const response = await fetch(`${getApiUrl()}/vendor/price/products/${productId}/discount-percentage`, {

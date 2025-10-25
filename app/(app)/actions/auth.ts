@@ -5,10 +5,10 @@ import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 
 // XSS koruması için sanitization
-function sanitizeInput(input: any): string {
+function sanitizeInput(input: unknown): string {
     if (typeof input !== 'string') return '';
     const window = new JSDOM('').window;
-    const purify = DOMPurify(window as any);
+    const purify = DOMPurify(window as unknown as Window & typeof globalThis);
     return purify.sanitize(input, { ALLOWED_TAGS: [] });
 }
 
@@ -25,7 +25,7 @@ function isValidPassword(password: string): boolean {
     return passwordRegex.test(password);
 }
 
-export async function signup(prevState: any, formData: FormData) {
+export async function signup(prevState: unknown, formData: FormData) {
     const rawFormData = {
         name: sanitizeInput(formData.get("name")),
         email: sanitizeInput(formData.get("email")),
@@ -88,7 +88,7 @@ export async function signup(prevState: any, formData: FormData) {
         };
     }
 }
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: unknown, formData: FormData) {
     const rawFormData = {
         email: sanitizeInput(formData.get("email")),
         password: formData.get("password") as string,

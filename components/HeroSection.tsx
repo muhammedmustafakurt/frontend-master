@@ -17,7 +17,7 @@ export default function HeroSection() {
             <span className="block text-gray-300">Hemen Bul</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Türkiye'nin en kapsamlı otomotiv yedek parça marketi. 
+            Türkiye&apos;nin en kapsamlı otomotiv yedek parça marketi. 
             Orijinal ve kaliteli parçalar, hızlı kargo, uygun fiyatlar.
           </p>
           <button className="inline-flex items-center px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors text-lg">
