@@ -54,7 +54,7 @@ export async function signup(prevState: unknown, formData: FormData) {
             return { message: "Ad soyad en az 2 karakter olmalıdır", type: "error" };
         }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-production-b8a9.up.railway.app/api/v1';
         const response = await fetch(`${apiUrl}/users/register`, {
             method: "POST",
             headers: {
@@ -103,7 +103,7 @@ export async function login(prevState: unknown, formData: FormData) {
             return { message: "Geçerli bir e-posta adresi giriniz", type: "error" };
         }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-production-b8a9.up.railway.app/api/v1';
         const response = await fetch(`${apiUrl}/auth/login`, {
             method: "POST",
             headers: {
@@ -154,7 +154,7 @@ export async function verifySession() {
         if (!token) {
             return { authenticated: false };
         }
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-master-production-b8a9.up.railway.app/api/v1';
         const res = await fetch(`${apiUrl}/auth/me`, {
             headers: {
                 // Sunucu eyleminden istek atıldığı için httpOnly cookie otomatik iletilmez; header'a ekleyelim
