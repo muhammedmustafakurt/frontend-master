@@ -1,0 +1,13 @@
+{
+  "name": "admin-panel-dependencies",
+  "version": "1.0.0",
+  "description": "Required dependencies for the admin panel",
+  "dependencies": {
+    "recharts": "^2.8.0",
+    "lucide-react": "^0.294.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  }
+}
