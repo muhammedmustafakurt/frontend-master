@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./(app)/globals.css";
 import QueryProvider from "./(app)/providers/query-provider";
 import { Toaster } from 'react-hot-toast';
@@ -28,6 +29,17 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Script
+          id="google-ads-conversion"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              gtag('config', 'AW-17802112177/KCvtCN_9jdUbELHZ2qhC', {
+                telefon_donusturme_numarasi: '0542 268 72 98'
+              });
+            `,
+          }}
+        />
         <QueryProvider>
           <CartProvider>
             <Toaster 
@@ -61,5 +73,4 @@ export default function RootLayout({
     </html>
   );
 }
-
 
