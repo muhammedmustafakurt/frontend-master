@@ -1,64 +1,56 @@
 'use client';
 
 import React from 'react';
-import { 
-  Settings, 
-  Zap, 
-  Lightbulb, 
-  Droplets, 
-  Wrench, 
-  Car, 
-  Battery, 
-  Shield 
+import {
+  Sun,
+  Wrench,
+  Droplets,
+  Hammer,
+  Bath,
+  ShowerHead
 } from 'lucide-react';
 
 const categories = [
   {
-    name: 'Motor & Mekanik',
-    icon: Settings,
-    description: 'Motor parçaları ve mekanik aksamlar',
+    name: 'Güneş enerjisi tamiratı',
+    icon: Sun,
+    description: 'Güneş enerji sistemlerinde arıza tespiti ve tamir hizmeti',
     color: 'bg-gray-100'
   },
   {
-    name: 'Fren Sistemi',
-    icon: Zap,
-    description: 'Fren balata, disk ve sistem parçaları',
-    color: 'bg-gray-100'
-  },
-  {
-    name: 'Elektrik & Aydınlatma',
-    icon: Lightbulb,
-    description: 'Elektrikli parçalar ve aydınlatma',
-    color: 'bg-gray-100'
-  },
-  {
-    name: 'Yağ & Sıvı',
-    icon: Droplets,
-    description: 'Motor yağları ve sıvılar',
-    color: 'bg-gray-100'
-  },
-  {
-    name: 'Filtreler',
+    name: 'Güneş enerjisi montajı',
     icon: Wrench,
-    description: 'Hava, yağ ve yakıt filtreleri',
+    description: 'Yeni güneş enerjisi sistemleri için profesyonel montaj',
     color: 'bg-gray-100'
   },
   {
-    name: 'Aksesuar',
-    icon: Car,
-    description: 'Araç aksesuarları ve yedek parçalar',
+    name: 'Sıhhi tesisat',
+    icon: Droplets,
+    description: 'Ev ve iş yerleri için genel sıhhi tesisat hizmetleri',
     color: 'bg-gray-100'
   },
   {
-    name: 'Akü & Elektrik',
-    icon: Battery,
-    description: 'Akü ve elektrik sistemleri',
+    name: 'Klozet tamiri',
+    icon: Hammer,
+    description: 'Klozet arızaları için hızlı tamir ve parça değişimi',
     color: 'bg-gray-100'
   },
   {
-    name: 'Güvenlik',
-    icon: Shield,
-    description: 'Güvenlik sistemleri ve parçaları',
+    name: 'Daire tesisatı yenileme',
+    icon: Bath,
+    description: 'Eski tesisatların yenilenmesi ve modernizasyonu',
+    color: 'bg-gray-100'
+  },
+  {
+    name: 'Çeşme montajı',
+    icon: ShowerHead,
+    description: 'Banyo ve mutfak için yeni çeşme montaj hizmeti',
+    color: 'bg-gray-100'
+  },
+  {
+    name: 'Banyo bataryası montajı',
+    icon: ShowerHead,
+    description: 'Banyo bataryalarında söküm, kurulum ve kontrol işlemleri',
     color: 'bg-gray-100'
   }
 ];
@@ -69,10 +61,10 @@ export default function FeaturedCategories() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Popüler Kategoriler
+            Hizmet Alanlarımız
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Aracınız için ihtiyacınız olan tüm parçaları kategoriler halinde bulun
+            İhtiyacınıza uygun tesisat ve güneş enerjisi hizmetlerini seçin
           </p>
         </div>
 

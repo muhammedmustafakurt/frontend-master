@@ -78,12 +78,6 @@ const DropletsIcon = () => (
   </svg>
 );
 
-const GiftIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-  </svg>
-);
-
 // Dummy data for dropdowns
 const carBrands = [
   'Audi', 'BMW', 'Mercedes-Benz', 'Volkswagen', 'Toyota', 'Honda', 'Ford', 'Opel', 'Renault', 'Peugeot'
@@ -106,44 +100,34 @@ const years = Array.from({ length: 25 }, (_, i) => 2024 - i);
 
 const categories = [
   {
-    name: 'Motor & Mekanik',
+    name: 'Güneş Enerjisi',
     icon: SettingsIcon,
     subcategories: [
-      'Motor Yağları', 'Hava Filtreleri', 'Yakıt Filtreleri', 'Motor Parçaları',
-      'Egzoz Sistemi', 'Soğutma Sistemi', 'Klima Sistemi', 'Transmisyon'
+      'Güneş enerjisi tamiratı',
+      'Güneş enerjisi montajı'
     ]
   },
   {
-    name: 'Fren Sistemi',
+    name: 'Tesisat Hizmetleri',
     icon: ZapIcon,
     subcategories: [
-      'Fren Balata', 'Fren Diski', 'Fren Kaliperi', 'Fren Hortumu',
-      'Fren Sıvısı', 'El Freni', 'ABS Sensörü', 'Fren Kampanası'
+      'Sıhhi tesisat',
+      'Daire tesisatı yenileme'
     ]
   },
   {
-    name: 'Elektrik & Aydınlatma',
+    name: 'Banyo & Klozet',
     icon: LightbulbIcon,
     subcategories: [
-      'Far Ampulü', 'Sinyal Ampulü', 'Fren Ampulü', 'Plaka Ampulü',
-      'Alternatör', 'Marş Motoru', 'Akü', 'Kablolar'
+      'Klozet tamiri',
+      'Çeşme montajı',
+      'Banyo bataryası montajı'
     ]
   },
   {
-    name: 'Yağ & Filtre',
+    name: 'Ek Hizmetler',
     icon: DropletsIcon,
-    subcategories: [
-      'Motor Yağı', 'Şanzıman Yağı', 'Fren Sıvısı', 'Soğutma Sıvısı',
-      'Yağ Filtresi', 'Hava Filtresi', 'Yakıt Filtresi', 'Kabin Filtresi'
-    ]
-  },
-  {
-    name: 'Yedek Parça Kampanyaları',
-    icon: GiftIcon,
-    subcategories: [
-      'İndirimli Ürünler', 'Toplu Alım Kampanyaları', 'Sezonluk İndirimler',
-      'Marka Kampanyaları', 'Yeni Ürünler', 'Stoktan Satış'
-    ]
+    subcategories: ['7/24 destek', 'Yerinde keşif', 'Hızlı servis']
   }
 ];
 
